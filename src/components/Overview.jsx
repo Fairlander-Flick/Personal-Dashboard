@@ -2,6 +2,44 @@ import React from 'react';
 import './Overview.css';
 
 export default function Overview({ setActiveTab }) {
+  // Read actual data from LocalStorage to show on the cards
+  const readStorage = (key) => {
+    try { return JSON.parse(localStorage.getItem(key)) || []; }
+    catch { return []; }
+  };
+
+  const weights = readStorage('astra_body_data').sort((a,b) => new Date(b.date) - new Date(a.date));
+  const expenses = readStorage('astra_budget');
+
+  // Weight Stats
+  const lastWeight = weights.length > 0 ? weights[0].weight : '—';
+  
+  // Budget Stats for current month
+  const currentMonthNum = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+  
+  const currentMonthExpenses = expenses.filter(exp => {
+    const d = new Date(exp.date);
+    return d.getMonth() === currentMonthNum && d.getFullYear() === currentYear;
+  });
+
+  const totalSpentThisMonth = currentMonthExpenses.reduce((acc, exp) => acc + exp.amount, 0);
+  
+  // Find top category this month
+  const categoryTotals = {};
+  currentMonthExpenses.forEach(exp => {
+    categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
+  });
+  
+  let topCategory = '—';
+  let maxCatAmount = 0;
+  for (const [cat, amt] of Object.entries(categoryTotals)) {
+    if (amt > maxCatAmount) {
+      topCategory = cat;
+      maxCatAmount = amt;
+    }
+  }
+
   const summaryCards = [
     {
       id: 'weight',
@@ -11,8 +49,8 @@ export default function Overview({ setActiveTab }) {
       color: 'var(--primary)',
       glow: 'var(--primary-glow)',
       stats: [
-        { label: 'Last Weight', value: '—', unit: 'kg' },
-        { label: 'Last Workout', value: '—', unit: '' },
+        { label: 'Last Weight', value: lastWeight, unit: 'kg' },
+        { label: 'Log Count', value: weights.length, unit: '' },
       ],
     },
     {
@@ -23,8 +61,8 @@ export default function Overview({ setActiveTab }) {
       color: 'var(--accent)',
       glow: 'var(--accent-glow)',
       stats: [
-        { label: 'This Month', value: '—', unit: '$' },
-        { label: 'Top Spend', value: '—', unit: '' },
+        { label: 'This Month', value: totalSpentThisMonth > 0 ? totalSpentThisMonth.toLocaleString('tr-TR') : '—', unit: '₺' },
+        { label: 'Top Spend', value: topCategory, unit: '' },
       ],
     },
   ];
