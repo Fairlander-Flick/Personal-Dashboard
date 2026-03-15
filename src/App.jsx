@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Navbar from './components/Navbar';
 import Overview from './components/Overview';
 import BodyTracker from './components/BodyTracker';
+import Budgeting from './components/Budgeting';
 import './App.css';
 
 function App() {
@@ -14,12 +15,7 @@ function App() {
       case 'weight':
         return <BodyTracker />;
       case 'budgeting':
-        return (
-          <div className="glass-card fade-in placeholder-card">
-            <h2>💰 Budgeting</h2>
-            <p>Monthly expense logging — coming in Phase 3.</p>
-          </div>
-        );
+        return <Budgeting />;
       default:
         return null;
     }
