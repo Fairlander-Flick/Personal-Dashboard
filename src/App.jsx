@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Navbar from './components/Navbar';
 import Overview from './components/Overview';
-import Fitness from './components/Fitness';
+import BodyTracker from './components/BodyTracker';
 import './App.css';
 
 function App() {
@@ -11,13 +11,13 @@ function App() {
     switch (activeTab) {
       case 'overview':
         return <Overview setActiveTab={setActiveTab} />;
-      case 'fitness':
-        return <Fitness />;
-      case 'finance':
+      case 'weight':
+        return <BodyTracker />;
+      case 'budgeting':
         return (
           <div className="glass-card fade-in placeholder-card">
-            <h2>💰 Finance Tracker</h2>
-            <p>Expense logging and reports — coming in Phase 4.</p>
+            <h2>💰 Budgeting</h2>
+            <p>Monthly expense logging — coming in Phase 3.</p>
           </div>
         );
       default:

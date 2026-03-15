@@ -4,10 +4,10 @@ import './Overview.css';
 export default function Overview({ setActiveTab }) {
   const summaryCards = [
     {
-      id: 'fitness',
-      icon: '💪',
-      title: 'Fitness & Body',
-      subtitle: 'Latest weight & workout summary',
+      id: 'weight',
+      icon: '⚖️',
+      title: 'Weight Tracker',
+      subtitle: 'Latest weight & trend',
       color: 'var(--primary)',
       glow: 'var(--primary-glow)',
       stats: [
@@ -16,9 +16,9 @@ export default function Overview({ setActiveTab }) {
       ],
     },
     {
-      id: 'finance',
+      id: 'budgeting',
       icon: '💰',
-      title: 'Finance',
+      title: 'Budgeting',
       subtitle: 'This month\'s spending',
       color: 'var(--accent)',
       glow: 'var(--accent-glow)',
