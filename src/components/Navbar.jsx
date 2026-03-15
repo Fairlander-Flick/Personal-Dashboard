@@ -6,6 +6,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
     { id: 'overview', label: 'Overview', icon: '🏠' },
     { id: 'weight', label: 'Weight', icon: '⚖️' },
     { id: 'budgeting', label: 'Budgeting', icon: '💰' },
+    { id: 'settings', label: 'Settings', icon: '⚙️' },
   ];
 
   return (

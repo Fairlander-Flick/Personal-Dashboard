@@ -54,10 +54,11 @@ const SMART_DICTIONARY = {
   'tedas': 'Bills',
 };
 
-const MONTHLY_LIMIT = 20000; // Example config. In the future this can go to settings.
+import { getSettings } from './Settings';
 
 export default function Budgeting() {
   const [expenses, setExpenses] = useState(getInitialData);
+  const { currency, monthlyLimit } = getSettings();
   const [amount, setAmount] = useState('');
   const [desc, setDesc] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -141,7 +142,7 @@ export default function Budgeting() {
   });
 
   const totalSpentThisMonth = currentMonthExpenses.reduce((acc, exp) => acc + exp.amount, 0);
-  const budgetPercentage = Math.min((totalSpentThisMonth / MONTHLY_LIMIT) * 100, 100);
+  const budgetPercentage = Math.min((totalSpentThisMonth / monthlyLimit) * 100, 100);
   
   let barColor = 'var(--primary)';
   if (budgetPercentage >= 90) barColor = 'var(--danger)';
@@ -155,8 +156,8 @@ export default function Budgeting() {
           <div>
             <h3 className="section-title" style={{marginBottom: '0.2rem'}}>This Month's Spending</h3>
             <p className="budget-subtitle">
-              <span className="spent-val">₺ {totalSpentThisMonth.toLocaleString('tr-TR')}</span> 
-              <span className="limit-val"> / ₺ {MONTHLY_LIMIT.toLocaleString('tr-TR')}</span>
+              <span className="spent-val">{currency}{totalSpentThisMonth.toLocaleString('en-US')}</span> 
+              <span className="limit-val"> / {currency}{monthlyLimit.toLocaleString('en-US')}</span>
             </p>
           </div>
           <div className="budget-percentage" style={{color: barColor}}>{budgetPercentage.toFixed(0)}%</div>
@@ -181,7 +182,7 @@ export default function Budgeting() {
             <input type="date" value={date} onChange={e => setDate(e.target.value)} required />
           </div>
           <div className="form-group">
-            <label>Amount (₺)</label>
+            <label>Amount ({currency})</label>
             <input
               type="number" step="0.01" min="0" placeholder="e.g. 150"
               value={amount} onChange={e => setAmount(e.target.value)} required
@@ -230,7 +231,7 @@ export default function Budgeting() {
                   </div>
                 </div>
                 <div className="exp-right">
-                  <span className="exp-amount">- ₺ {exp.amount.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</span>
+                  <span className="exp-amount">- {currency}{exp.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
                   <div className="exp-actions">
                     <button className="icon-btn edit-btn" onClick={() => handleEdit(exp)}>✏️</button>
                     <button className="icon-btn delete-btn" onClick={() => handleDelete(exp.id)}>🗑</button>

@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Overview from './components/Overview';
 import BodyTracker from './components/BodyTracker';
 import Budgeting from './components/Budgeting';
+import Settings from './components/Settings';
 import './App.css';
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
         return <BodyTracker />;
       case 'budgeting':
         return <Budgeting />;
+      case 'settings':
+        return <Settings />;
       default:
         return null;
     }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { getSettings } from './Settings';
 import './Overview.css';
 
 export default function Overview({ setActiveTab }) {
@@ -10,6 +11,7 @@ export default function Overview({ setActiveTab }) {
 
   const weights = readStorage('astra_body_data').sort((a,b) => new Date(b.date) - new Date(a.date));
   const expenses = readStorage('astra_budget');
+  const { currency } = getSettings();
 
   // Weight Stats
   const lastWeight = weights.length > 0 ? weights[0].weight : '—';
@@ -61,7 +63,7 @@ export default function Overview({ setActiveTab }) {
       color: 'var(--accent)',
       glow: 'var(--accent-glow)',
       stats: [
-        { label: 'This Month', value: totalSpentThisMonth > 0 ? totalSpentThisMonth.toLocaleString('tr-TR') : '—', unit: '₺' },
+        { label: 'This Month', value: totalSpentThisMonth > 0 ? totalSpentThisMonth.toLocaleString('en-US') : '—', unit: currency },
         { label: 'Top Spend', value: topCategory, unit: '' },
       ],
     },
