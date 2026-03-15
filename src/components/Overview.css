@@ -1,0 +1,153 @@
+.overview-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.overview-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.overview-title {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--text-primary), var(--text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.overview-date {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.overview-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.overview-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.overview-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--card-color) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.overview-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--card-color);
+  box-shadow: 0 12px 40px var(--card-glow), var(--glass-shadow);
+}
+
+.overview-card:hover::before {
+  opacity: 0.06;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.card-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.card-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.card-stats {
+  display: flex;
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--card-color);
+}
+
+.stat-value small {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card-arrow {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  font-size: 1.25rem;
+  color: var(--card-color);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: all var(--transition);
+  z-index: 1;
+}
+
+.overview-card:hover .card-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.overview-tip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  font-size: 0.875rem;
+}
+
+.overview-tip p {
+  color: var(--text-secondary);
+}

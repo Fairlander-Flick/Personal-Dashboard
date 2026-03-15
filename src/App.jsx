@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Navbar from './components/Navbar';
+import Overview from './components/Overview';
 import './App.css';
 
 function App() {
@@ -8,24 +9,19 @@ function App() {
   const renderContent = () => {
     switch (activeTab) {
       case 'overview':
-        return (
-          <div className="glass-card fade-in placeholder-card">
-            <h2>🏠 Overview</h2>
-            <p>Son verilerin özet görünümü — Phase 1'de geliştirilecek.</p>
-          </div>
-        );
+        return <Overview setActiveTab={setActiveTab} />;
       case 'fitness':
         return (
           <div className="glass-card fade-in placeholder-card">
             <h2>💪 Fitness & Vücut Takibi</h2>
-            <p>Kilo, idman ve egzersiz logu — Phase 2'de geliştirilecek.</p>
+            <p>Kilo, idman ve egzersiz logu — Phase 2'de gelecek.</p>
           </div>
         );
       case 'finance':
         return (
           <div className="glass-card fade-in placeholder-card">
             <h2>💰 Finans Takibi</h2>
-            <p>Harcama kayıtları ve raporlar — Phase 4'te geliştirilecek.</p>
+            <p>Harcama kayıtları ve raporlar — Phase 4'te gelecek.</p>
           </div>
         );
       default:
