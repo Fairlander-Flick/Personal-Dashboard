@@ -13,13 +13,13 @@ export default function Fitness() {
           className={`section-tab ${activeSection === 'workout' ? 'active' : ''}`}
           onClick={() => setActiveSection('workout')}
         >
-          🏋️ Antrenman Logu
+          🏋️ Workout Log
         </button>
         <button
           className={`section-tab ${activeSection === 'body' ? 'active' : ''}`}
           onClick={() => setActiveSection('body')}
         >
-          ⚖️ Vücut & Kilo
+          ⚖️ Weight Tracker
         </button>
       </div>
 

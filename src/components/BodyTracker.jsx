@@ -11,14 +11,62 @@ function getInitialData() {
   }
 }
 
+// Simple SVG line chart for weight trend
+function WeightChart({ data }) {
+  if (data.length < 2) return null;
+
+  // Sort chronological for chart
+  const sorted = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  const minWeight = Math.min(...sorted.map(d => d.weight)) - 2;
+  const maxWeight = Math.max(...sorted.map(d => d.weight)) + 2;
+  
+  const width = 600;
+  const height = 200;
+  const paddingX = 40;
+  const paddingY = 20;
+  
+  const points = sorted.map((d, i) => {
+    const x = paddingX + (i / (sorted.length - 1)) * (width - 2 * paddingX);
+    const y = height - paddingY - ((d.weight - minWeight) / (maxWeight - minWeight)) * (height - 2 * paddingY);
+    return `${x},${y}`;
+  }).join(' ');
+
+  return (
+    <div className="weight-chart-container glass-card">
+      <h4 className="chart-title">Weight Trend</h4>
+      <svg viewBox={`0 0 ${width} ${height}`} className="weight-svg">
+        <line x1={paddingX} y1={height - paddingY} x2={width - paddingX} y2={height - paddingY} stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+        <polyline
+          fill="none"
+          stroke="var(--primary)"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          points={points}
+          className="chart-line"
+        />
+        {sorted.map((d, i) => {
+          const x = paddingX + (i / (sorted.length - 1)) * (width - 2 * paddingX);
+          const y = height - paddingY - ((d.weight - minWeight) / (maxWeight - minWeight)) * (height - 2 * paddingY);
+          return (
+            <g key={d.id}>
+              <circle cx={x} cy={y} r="4" fill="var(--bg-surface)" stroke="var(--primary)" strokeWidth="2" />
+              <text x={x} y={y - 12} fill="var(--text-secondary)" fontSize="10" textAnchor="middle">{d.weight}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
 export default function BodyTracker() {
   const [entries, setEntries] = useState(getInitialData);
   const [weight, setWeight] = useState('');
-  const [bodyFat, setBodyFat] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [editingId, setEditingId] = useState(null);
 
-  // Persist to LocalStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
   }, [entries]);
@@ -28,52 +76,48 @@ export default function BodyTracker() {
     if (!weight || !date) return;
 
     if (editingId) {
-      setEntries((prev) =>
-        prev.map((entry) =>
+      setEntries(prev =>
+        prev.map(entry =>
           entry.id === editingId
-            ? { ...entry, weight: parseFloat(weight), bodyFat: bodyFat ? parseFloat(bodyFat) : null, date }
+            ? { ...entry, weight: parseFloat(weight), date }
             : entry
-        )
+        ).sort((a, b) => new Date(b.date) - new Date(a.date)) // keep sorted latest first
       );
       setEditingId(null);
     } else {
       const newEntry = {
         id: Date.now(),
         date,
-        weight: parseFloat(weight),
-        bodyFat: bodyFat ? parseFloat(bodyFat) : null,
+        weight: parseFloat(weight)
       };
-      setEntries((prev) => [newEntry, ...prev]);
+      setEntries(prev => [...prev, newEntry].sort((a, b) => new Date(b.date) - new Date(a.date)));
     }
 
     setWeight('');
-    setBodyFat('');
     setDate(new Date().toISOString().split('T')[0]);
   };
 
   const handleEdit = (entry) => {
     setEditingId(entry.id);
     setWeight(String(entry.weight));
-    setBodyFat(entry.bodyFat != null ? String(entry.bodyFat) : '');
     setDate(entry.date);
   };
 
   const handleDelete = (id) => {
-    setEntries((prev) => prev.filter((e) => e.id !== id));
+    setEntries(prev => prev.filter(e => e.id !== id));
     if (editingId === id) {
       setEditingId(null);
       setWeight('');
-      setBodyFat('');
     }
   };
 
   const handleCancel = () => {
     setEditingId(null);
     setWeight('');
-    setBodyFat('');
     setDate(new Date().toISOString().split('T')[0]);
   };
 
+  // Entries are already sorted latest first
   const latest = entries[0];
 
   return (
@@ -83,61 +127,46 @@ export default function BodyTracker() {
         <div className="body-stats fade-in">
           <div className="body-stat-item">
             <span className="body-stat-value">{latest.weight}<small>kg</small></span>
-            <span className="body-stat-label">Son Kilo</span>
+            <span className="body-stat-label">Current Weight</span>
           </div>
-          {latest.bodyFat != null && (
-            <div className="body-stat-item">
-              <span className="body-stat-value">{latest.bodyFat}<small>%</small></span>
-              <span className="body-stat-label">Vücut Yağı</span>
-            </div>
-          )}
           <div className="body-stat-item">
             <span className="body-stat-value secondary">{entries.length}</span>
-            <span className="body-stat-label">Kayıt</span>
+            <span className="body-stat-label">Log Entries</span>
           </div>
         </div>
       )}
 
+      {/* Chart */}
+      {entries.length >= 2 && <WeightChart data={entries} />}
+
       {/* Entry Form */}
       <form className="glass-card body-form fade-in" onSubmit={handleSubmit}>
-        <h3 className="form-title">{editingId ? '✏️ Kaydı Düzenle' : '⚖️ Vücut Verisi Ekle'}</h3>
+        <h3 className="form-title">{editingId ? '✏️ Edit Entry' : '⚖️ Log Weight'}</h3>
         <div className="form-row">
           <div className="form-group">
-            <label>Tarih</label>
+            <label>Date</label>
             <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
           </div>
           <div className="form-group">
-            <label>Kilo (kg) *</label>
+            <label>Weight (kg)</label>
             <input
               type="number"
               step="0.1"
               min="0"
-              placeholder="örn. 78.5"
+              placeholder="e.g. 78.5"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
               required
             />
           </div>
-          <div className="form-group">
-            <label>Vücut Yağı (%) <span className="optional">opsiyonel</span></label>
-            <input
-              type="number"
-              step="0.1"
-              min="0"
-              max="100"
-              placeholder="örn. 18.2"
-              value={bodyFat}
-              onChange={(e) => setBodyFat(e.target.value)}
-            />
-          </div>
         </div>
         <div className="form-actions">
           <button type="submit" className="btn-primary">
-            {editingId ? '💾 Güncelle' : '+ Ekle'}
+            {editingId ? '💾 Update' : '+ Add'}
           </button>
           {editingId && (
             <button type="button" className="btn-ghost" onClick={handleCancel}>
-              İptal
+              Cancel
             </button>
           )}
         </div>
@@ -146,20 +175,21 @@ export default function BodyTracker() {
       {/* History List */}
       {entries.length > 0 && (
         <div className="glass-card fade-in">
-          <h3 className="section-title">📋 Geçmiş Kayıtlar</h3>
+          <h3 className="section-title">📋 History</h3>
           <div className="body-history-list">
             {entries.map((entry, idx) => (
               <div key={entry.id} className={`history-item ${idx === 0 ? 'latest' : ''}`}>
                 <div className="history-info">
-                  <span className="history-date">{new Date(entry.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                  <span className="history-date">
+                    {new Date(entry.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </span>
                   <div className="history-values">
                     <span className="history-weight">{entry.weight} kg</span>
-                    {entry.bodyFat != null && <span className="history-fat">%{entry.bodyFat} yağ</span>}
                   </div>
                 </div>
                 <div className="history-actions">
-                  <button className="icon-btn edit-btn" onClick={() => handleEdit(entry)} title="Düzenle">✏️</button>
-                  <button className="icon-btn delete-btn" onClick={() => handleDelete(entry.id)} title="Sil">🗑️</button>
+                  <button className="icon-btn edit-btn" onClick={() => handleEdit(entry)} title="Edit">✏️</button>
+                  <button className="icon-btn delete-btn" onClick={() => handleDelete(entry.id)} title="Delete">🗑️</button>
                 </div>
               </div>
             ))}

@@ -16,8 +16,8 @@ function App() {
       case 'finance':
         return (
           <div className="glass-card fade-in placeholder-card">
-            <h2>💰 Finans Takibi</h2>
-            <p>Harcama kayıtları ve raporlar — Phase 4'te gelecek.</p>
+            <h2>💰 Finance Tracker</h2>
+            <p>Expense logging and reports — coming in Phase 4.</p>
           </div>
         );
       default:
