@@ -3,29 +3,29 @@ import Navbar from './components/Navbar';
 import './App.css';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('weight');
+  const [activeTab, setActiveTab] = useState('overview');
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'weight':
+      case 'overview':
         return (
-          <div className="glass-card fade-in">
-            <h2>⚖️ Weight Tracker Modülü Eklenecek</h2>
-            <p>Phase 2 de geliştirilecektir.</p>
+          <div className="glass-card fade-in placeholder-card">
+            <h2>🏠 Overview</h2>
+            <p>Son verilerin özet görünümü — Phase 1'de geliştirilecek.</p>
           </div>
         );
       case 'fitness':
         return (
-          <div className="glass-card fade-in">
-            <h2>💪 Fitness Tracker Modülü Eklenecek</h2>
-            <p>Phase 3/4 te geliştirilecektir.</p>
+          <div className="glass-card fade-in placeholder-card">
+            <h2>💪 Fitness & Vücut Takibi</h2>
+            <p>Kilo, idman ve egzersiz logu — Phase 2'de geliştirilecek.</p>
           </div>
         );
       case 'finance':
         return (
-          <div className="glass-card fade-in">
-            <h2>💰 Finance Tracker Modülü Eklenecek</h2>
-            <p>Phase 5/6 da geliştirilecektir.</p>
+          <div className="glass-card fade-in placeholder-card">
+            <h2>💰 Finans Takibi</h2>
+            <p>Harcama kayıtları ve raporlar — Phase 4'te geliştirilecek.</p>
           </div>
         );
       default:
@@ -35,6 +35,9 @@ function App() {
 
   return (
     <div className="app-container">
+      <div className="bg-glow bg-glow-1" />
+      <div className="bg-glow bg-glow-2" />
+      <div className="bg-glow bg-glow-3" />
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
       <main className="content-area">
         {renderContent()}

@@ -3,9 +3,9 @@ import './Navbar.css';
 
 export default function Navbar({ activeTab, setActiveTab }) {
   const tabs = [
-    { id: 'weight', label: 'Weight', icon: '⚖️' },
+    { id: 'overview', label: 'Overview', icon: '🏠' },
     { id: 'fitness', label: 'Fitness', icon: '💪' },
-    { id: 'finance', label: 'Finance', icon: '💰' }
+    { id: 'finance', label: 'Finance', icon: '💰' },
   ];
 
   return (
